@@ -305,6 +305,16 @@ define Device/aruba_ap-105
 endef
 TARGET_DEVICES += aruba_ap-105
 
+define Device/atheros_db120
+  SOC := ar9344
+  DEVICE_VENDOR := Atheros
+  DEVICE_MODEL := DB120
+  DEVICE_PACKAGES := kmod-usb2
+  IMAGE_SIZE := 7808k
+  SUPPORTED_DEVICES += db120
+endef
+TARGET_DEVICES += atheros_db120
+
 define Device/avm
   DEVICE_VENDOR := AVM
   KERNEL := kernel-bin | append-dtb | lzma | eva-image
