@@ -48,6 +48,9 @@ alfa-network,r36a)
 	ucidef_set_led_netdev "lan" "LAN" "blue:lan" "eth0"
 	ucidef_set_led_switch "wan" "WAN" "blue:wan" "switch0" "0x10"
 	;;
+atheros,db120)
+	ucidef_set_led_usbport "usb" "USB" "$board:green:usb" "usb1-port1"
+	;;
 avm,fritz1750e)
 	ucidef_set_led_netdev "lan" "LAN" "green:lan" "eth0"
 	ucidef_set_rssimon "wlan1" "200000" "1"
