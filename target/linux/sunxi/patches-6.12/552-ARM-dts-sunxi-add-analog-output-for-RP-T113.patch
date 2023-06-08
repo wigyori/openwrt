@@ -1,0 +1,16 @@
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-rp-t113.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-rp-t113.dts
+@@ -221,3 +221,13 @@
+ 	        "Headphone", "HP";
+ 	status = "okay";
+ };
++
++&codec_analog {
++	status = "okay";
++};
++
++&codec {
++	allwinner,audio-routing =
++	        "Headphone", "HP";
++	status = "okay";
++};
