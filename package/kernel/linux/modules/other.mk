@@ -47,6 +47,7 @@ define KernelPackage/bluetooth
 	CONFIG_BT_HCIUART_INTEL=n \
 	CONFIG_BT_HCIUART_H4 \
 	CONFIG_BT_HCIUART_NOKIA=n \
+	CONFIG_BT_HCIUART_RTL \
 	CONFIG_BT_HIDP
   $(call AddDepends/rfkill)
   FILES:= \
