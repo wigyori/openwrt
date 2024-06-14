@@ -1,0 +1,27 @@
+From e6368d5e41469e7fdbd4a6eaff10ab0ddb2a9e63 Mon Sep 17 00:00:00 2001
+From: Hal Feng <hal.feng@starfivetech.com>
+Date: Sat, 7 Oct 2023 18:10:20 +0800
+Subject: [PATCH 055/121] mm/pgtable-generic.c: Export symbol __pte_offset_map
+
+So JH7110 vdec can call pte_offset_map() when it is built as a module.
+
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+ mm/pgtable-generic.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+index 4fcd959dcc4d..ffc4fd51b198 100644
+--- a/mm/pgtable-generic.c
++++ b/mm/pgtable-generic.c
+@@ -302,6 +302,7 @@ pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp)
+ 	rcu_read_unlock();
+ 	return NULL;
+ }
++EXPORT_SYMBOL(__pte_offset_map);
+ 
+ pte_t *pte_offset_map_nolock(struct mm_struct *mm, pmd_t *pmd,
+ 			     unsigned long addr, spinlock_t **ptlp)
+-- 
+2.30.2
+

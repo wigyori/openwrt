@@ -1,0 +1,27 @@
+From 5c779121ada5a9854290bd30f6ba1950bf18d1b9 Mon Sep 17 00:00:00 2001
+From: Ziv Xu <ziv.xu@starfivetech.com>
+Date: Wed, 13 Mar 2024 18:43:27 +0800
+Subject: [PATCH 104/121] driver: regulator: pmic driver support kernel 6.6
+
+pmic driver support kernel 6.6
+
+Signed-off-by: Ziv Xu <ziv.xu@starfivetech.com>
+---
+ drivers/regulator/axp20x-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index c657820b0bbb..810f90f3e2a1 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -20,6 +20,7 @@
+ #include <linux/mfd/axp20x.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/driver.h>
+-- 
+2.30.2
+

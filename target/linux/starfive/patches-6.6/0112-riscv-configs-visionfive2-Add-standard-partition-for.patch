@@ -1,0 +1,28 @@
+From 47b606ba0aacadf2fa929db1682aae873fa69f2d Mon Sep 17 00:00:00 2001
+From: Hal Feng <hal.feng@starfivetech.com>
+Date: Thu, 21 Mar 2024 16:53:51 +0800
+Subject: [PATCH 112/121] riscv: configs: visionfive2: Add standard partition
+ for hibernation
+
+Add CONFIG_PM_STD_PARTITION="PARTLABEL=hibernation".
+
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+ arch/riscv/configs/starfive_visionfive2_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/configs/starfive_visionfive2_defconfig b/arch/riscv/configs/starfive_visionfive2_defconfig
+index 4b675e0c77cd..2d6d837ec004 100644
+--- a/arch/riscv/configs/starfive_visionfive2_defconfig
++++ b/arch/riscv/configs/starfive_visionfive2_defconfig
+@@ -24,6 +24,7 @@ CONFIG_NONPORTABLE=y
+ CONFIG_SMP=y
+ CONFIG_HZ_100=y
+ CONFIG_HIBERNATION=y
++CONFIG_PM_STD_PARTITION="PARTLABEL=hibernation"
+ CONFIG_PM_DEBUG=y
+ CONFIG_PM_ADVANCED_DEBUG=y
+ CONFIG_PM_TEST_SUSPEND=y
+-- 
+2.30.2
+

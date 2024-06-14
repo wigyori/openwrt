@@ -1,0 +1,45 @@
+From 27feac5795f30ffc5ad63fd004cf045ddcf8d3c3 Mon Sep 17 00:00:00 2001
+From: Samin Guo <samin.guo@starfivetech.com>
+Date: Mon, 26 Jun 2023 16:43:17 +0800
+Subject: [PATCH 096/121] soc: sifive: ccache: Add sifive_l2_flush64_range
+
+Add sifive_l2_flush64_range to be compatible with old code
+
+Signed-off-by: Samin Guo <samin.guo@starfivetech.com>
+---
+ drivers/soc/sifive/sifive_ccache.c | 6 ++++++
+ include/soc/sifive/sifive_ccache.h | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/soc/sifive/sifive_ccache.c b/drivers/soc/sifive/sifive_ccache.c
+index af84440d3b7e..42f88279366f 100644
+--- a/drivers/soc/sifive/sifive_ccache.c
++++ b/drivers/soc/sifive/sifive_ccache.c
+@@ -156,6 +156,12 @@ void sifive_ccache_flush_range(phys_addr_t start, size_t len)
+ }
+ EXPORT_SYMBOL_GPL(sifive_ccache_flush_range);
+ 
++void sifive_l2_flush64_range(phys_addr_t start, size_t len)
++{
++	sifive_ccache_flush_range(start, len);
++}
++EXPORT_SYMBOL_GPL(sifive_l2_flush64_range);
++
+ void *sifive_ccache_set_uncached(void *addr, size_t size)
+ {
+ 	phys_addr_t phys_addr = __pa(addr) + uncached_offset;
+diff --git a/include/soc/sifive/sifive_ccache.h b/include/soc/sifive/sifive_ccache.h
+index d349ccb3969b..e336ac3f73cb 100644
+--- a/include/soc/sifive/sifive_ccache.h
++++ b/include/soc/sifive/sifive_ccache.h
+@@ -28,6 +28,7 @@ static inline bool sifive_ccache_handle_noncoherent(void)
+ }
+ 
+ void sifive_ccache_flush_range(phys_addr_t start, size_t len);
++void sifive_l2_flush64_range(phys_addr_t start, size_t len);
+ void *sifive_ccache_set_uncached(void *addr, size_t size);
+ static inline void sifive_ccache_clear_uncached(void *addr, size_t size)
+ {
+-- 
+2.30.2
+

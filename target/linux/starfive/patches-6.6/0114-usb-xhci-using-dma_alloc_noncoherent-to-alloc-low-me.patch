@@ -1,0 +1,113 @@
+From 799de42a8e7b24c275446ca38a3a5f48580c44d0 Mon Sep 17 00:00:00 2001
+From: Minda Chen <minda.chen@starfivetech.com>
+Date: Mon, 3 Jul 2023 16:14:20 +0800
+Subject: [PATCH 114/121] usb: xhci: using dma_alloc_noncoherent to alloc low
+ memory pool
+
+For RISCV_NONCACHEHERENT is set, using dma_alloc_noncoherent
+to alloc cached large block low memory buffer. And set default
+size to 4M. (largest size of continuous memory can be supported)
+
+Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+---
+ drivers/usb/host/xhci-mem.c  | 29 ++++++++++++++++-------------
+ drivers/usb/host/xhci-plat.c |  9 +++++----
+ 2 files changed, 21 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index bc44cb809544..c4d90a503b21 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1891,7 +1891,8 @@ void xhci_mem_cleanup(struct xhci_hcd *xhci)
+ 
+ 	if (xhci->lowmem_pool.pool) {
+ 		pool = &xhci->lowmem_pool;
+-		dma_free_coherent(dev, pool->size, (void *)pool->cached_base, pool->dma_addr);
++		dma_free_noncoherent(dev, pool->size, (void *)pool->cached_base,
++				     pool->dma_addr, DMA_BIDIRECTIONAL);
+ 		gen_pool_destroy(pool->pool);
+ 		pool->pool = NULL;
+ 	}
+@@ -2317,15 +2318,15 @@ int xhci_setup_local_lowmem(struct xhci_hcd *xhci, size_t size)
+ 	if (!pool->pool) {
+ 		/* minimal alloc one page */
+ 		pool->pool = gen_pool_create(PAGE_SHIFT, dev_to_node(hcd->self.sysdev));
+-		if (IS_ERR(pool->pool))
+-			return PTR_ERR(pool->pool);
++		if (!pool->pool)
++			return -ENOMEM;
+ 	}
+ 
+-	buffer = dma_alloc_coherent(hcd->self.sysdev, size, &dma_addr,
+-			GFP_KERNEL | GFP_DMA32);
++	buffer = dma_alloc_noncoherent(hcd->self.sysdev, size, &dma_addr,
++		DMA_BIDIRECTIONAL, GFP_ATOMIC);
+ 
+-	if (IS_ERR(buffer)) {
+-		err = PTR_ERR(buffer);
++	if (!buffer) {
++		err = -ENOMEM;
+ 		goto destroy_pool;
+ 	}
+ 
+@@ -2335,11 +2336,11 @@ int xhci_setup_local_lowmem(struct xhci_hcd *xhci, size_t size)
+ 	 * for it.
+ 	 */
+ 	err = gen_pool_add_virt(pool->pool, (unsigned long)buffer,
+-				dma_addr, size, dev_to_node(hcd->self.sysdev));
++		dma_addr, size, dev_to_node(hcd->self.sysdev));
+ 	if (err < 0) {
+ 		dev_err(hcd->self.sysdev, "gen_pool_add_virt failed with %d\n",
+ 			err);
+-		dma_free_coherent(hcd->self.sysdev, size, buffer, dma_addr);
++		dma_free_noncoherent(hcd->self.sysdev, size, buffer, dma_addr, DMA_BIDIRECTIONAL);
+ 		goto destroy_pool;
+ 	}
+ 
+@@ -2362,7 +2363,7 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 	unsigned int	val, val2;
+ 	u64		val_64;
+ 	u32		page_size, temp;
+-	int		i;
++	int		i, ret;
+ 
+ 	INIT_LIST_HEAD(&xhci->cmd_list);
+ 
+@@ -2492,9 +2493,11 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 	xhci->isoc_bei_interval = AVOID_BEI_INTERVAL_MAX;
+ 
+ 	if (xhci->quirks & XHCI_LOCAL_BUFFER) {
+-		if (xhci_setup_local_lowmem(xhci,
+-			xhci->lowmem_pool.size))
+-			goto fail;
++		ret = xhci_setup_local_lowmem(xhci, xhci->lowmem_pool.size);
++		if (ret) {
++			xhci->quirks &= ~XHCI_LOCAL_BUFFER;
++			xhci_warn(xhci, "WARN: Can't alloc lowmem pool\n");
++		}
+ 	}
+ 
+ 	/*
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 5de9eea81f71..c2a5a19ae716 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -255,10 +255,11 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
+ 
+ 		if (device_property_read_bool(tmpdev, "xhci-lowmem-pool")) {
+ 			xhci->quirks |= XHCI_LOCAL_BUFFER;
+-			if (device_property_read_u32(tmpdev, "lowmem-pool-size",
+-				&xhci->lowmem_pool.size)) {
+-				xhci->lowmem_pool.size = 8 << 20;
+-			} else
++			ret = device_property_read_u32(tmpdev, "lowmem-pool-size",
++				&xhci->lowmem_pool.size);
++			if (ret || xhci->lowmem_pool.size >= 4)
++				xhci->lowmem_pool.size = 4 << 20;
++			else
+ 				xhci->lowmem_pool.size <<= 20;
+ 		}
+ 		device_property_read_u32(tmpdev, "imod-interval-ns",
+-- 
+2.30.2
+

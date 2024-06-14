@@ -1,0 +1,29 @@
+From f52a54827af7aa06260e7fc3f836904c8e129702 Mon Sep 17 00:00:00 2001
+From: Hal Feng <hal.feng@starfivetech.com>
+Date: Mon, 26 Feb 2024 11:35:44 +0800
+Subject: [PATCH 054/121] pinctrl: starfive: jh7110: Unset .strict in
+ pinmux_ops
+
+Allow simultaneous use of the same pin for GPIO and another function.
+This feature is used in HDMI hot plug detect.
+
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+index b4f799572689..a38dfa9be6e4 100644
+--- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
++++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+@@ -327,7 +327,6 @@ static const struct pinmux_ops jh7110_pinmux_ops = {
+ 	.get_function_name   = pinmux_generic_get_function_name,
+ 	.get_function_groups = pinmux_generic_get_function_groups,
+ 	.set_mux	     = jh7110_set_mux,
+-	.strict		     = true,
+ };
+ 
+ static const u8 jh7110_drive_strength_mA[4] = { 2, 4, 8, 12 };
+-- 
+2.30.2
+

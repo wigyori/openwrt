@@ -1,0 +1,27 @@
+From 613d0163a98c1c6469d9ce6aed39be9302dcae6d Mon Sep 17 00:00:00 2001
+From: Hal Feng <hal.feng@starfivetech.com>
+Date: Tue, 12 Dec 2023 17:56:58 +0800
+Subject: [PATCH 091/121] workqueue: Enable flush_scheduled_work()
+
+Enable flush_scheduled_work() for JH7110 GPU.
+
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+ include/linux/workqueue.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 24b1e5070f4d..93db7a75b62b 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -636,7 +636,6 @@ extern void __warn_flushing_systemwide_wq(void)
+ /* Please stop using this function, for this function will be removed in near future. */
+ #define flush_scheduled_work()						\
+ ({									\
+-	__warn_flushing_systemwide_wq();				\
+ 	__flush_workqueue(system_wq);					\
+ })
+ 
+-- 
+2.30.2
+
