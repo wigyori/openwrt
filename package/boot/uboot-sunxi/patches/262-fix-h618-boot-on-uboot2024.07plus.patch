@@ -1,0 +1,39 @@
+diff -ruN u-boot-2025.01.orig/board/sunxi/board.c u-boot-2025.01/board/sunxi/board.c
+--- u-boot-2025.01.orig/board/sunxi/board.c	2025-04-01 22:45:18.106611392 +0000
++++ u-boot-2025.01/board/sunxi/board.c	2025-04-01 23:01:03.395003475 +0000
+@@ -234,7 +234,15 @@
+ 	 * the whole register to zero so we are doing the same.
+ 	 */
+ 	writel(0x0, SUNXI_SRAMC_BASE);
+-#endif
++
++#if CONFIG_IS_ENABLED(DM_I2C)
++	/*
++	 * Temporary workaround for enabling I2C clocks until proper sunxi DM
++	 * clk, reset and pinctrl drivers land.
++	 */
++	i2c_init_board();
++#endif /* CONFIG_IS_ENABLED(DM_I2C) */
++#endif /* CONFIG_MACH_SUN50I_H616 */
+ 
+ 	return 0;
+ }
+diff -ruN u-boot-2025.01.orig/arch/arm/mach-sunxi/clock_sun50i_h6.c u-boot-2025.01/arch/arm/mach-sunxi/clock_sun50i_h6.c
+--- u-boot-2025.01.orig/arch/arm/mach-sunxi/clock_sun50i_h6.c	2025-04-01 22:45:18.110611342 +0000
++++ u-boot-2025.01/arch/arm/mach-sunxi/clock_sun50i_h6.c	2025-04-01 23:10:49.051834515 +0000
+@@ -105,6 +105,7 @@
+ 	val |= CCM_CPU_AXI_MUX_PLL_CPUX;
+ 	writel(val, &ccm->cpu_axi_cfg);
+ }
++#endif /* CONFIG_XPL_BUILD */
+ 
+ int clock_twi_onoff(int port, int state)
+ {
+@@ -133,7 +134,6 @@
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_XPL_BUILD */
+ 
+ /* PLL_PERIPH0 clock, used by the MMC driver */
+ unsigned int clock_get_pll6(void)
