@@ -1,0 +1,31 @@
+From cbec657208bdd4bff4ff31cac5924aa18817027c Mon Sep 17 00:00:00 2001
+From: Jernej Skrabec <jernej.skrabec@gmail.com>
+Date: Thu, 22 Feb 2024 22:13:26 +0100
+Subject: arm64: dts: allwinner: h616: Add Orange Pi Zero 2W to Makefile
+
+Orange Pi Zero 2W dts file is not included in Makefile. Fix this.
+
+Fixes: c505ee1eae18 ("arm64: dts: allwinner: h616: add Orange Pi Zero 2W support")
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Link: https://lore.kernel.org/r/20240222211326.114955-1-jernej.skrabec@gmail.com
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+(limited to 'arch/arm64/boot/dts/allwinner/Makefile')
+
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index 91d505b385de5a..1f1f8d865d0e52 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -42,5 +42,6 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-cb1-manta.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-pi.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-orangepi-zero2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-x96-mate.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero2w.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero3.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-transpeed-8k618-t.dtb
+-- 
+cgit 1.2.3-korg
+
