@@ -420,6 +420,12 @@ define U-Boot/myir_myd_t113x-spi
   UENV:=t113.ttyS5
 endef
 
+define U-Boot/olimex_olinuxino
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=MYIR MYD-T113X
+  BUILD_DEVICES:=olimex_olinuxino
+endef
+
 define U-Boot/rongpin_rp_t113
   BUILD_SUBTARGET:=cortexa7
   NAME:=Rongpin RP-T113
@@ -468,6 +474,7 @@ UBOOT_TARGETS := \
 	nanopi_neo2 \
 	nanopi_r1 \
 	nanopi_r1s_h5 \
+	olimex_olinuxino \
 	orangepi_zero \
 	orangepi_r1 \
 	orangepi_one \

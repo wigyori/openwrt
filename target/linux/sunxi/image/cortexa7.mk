@@ -338,6 +338,16 @@ define Device/myir_myd-yt113x-spi
 endef
 TARGET_DEVICES += myir_myd-yt113x-spi
 
+define Device/olimex_olinuxino
+  $(call Device/FitImageGzip)
+  DEVICE_VENDOR := Olimex
+  DEVICE_MODEL := T113 Olinuxino
+  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-rtl8723bs wpad-basic-mbedtls
+  SOC := sun8i-t113s
+  IMAGE/sdcard.img.gz := sunxi-sdcard | append-metadata | gzip
+endef
+TARGET_DEVICES += olimex_olinuxino
+
 define Device/rongpin_rp-t113
   $(call Device/FitImageGzip)
   DEVICE_VENDOR := Rongpin
