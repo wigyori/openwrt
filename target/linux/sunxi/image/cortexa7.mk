@@ -342,7 +342,8 @@ define Device/olimex_olinuxino
   $(call Device/FitImageGzip)
   DEVICE_VENDOR := Olimex
   DEVICE_MODEL := T113 Olinuxino
-  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-rtl8723bs wpad-basic-mbedtls
+  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-rtl8723bs wpad-basic-mbedtls \
+	rtl8723bs-firmware kmod-btrtl kmod-hci-uart
   SOC := sun8i-t113s
   IMAGE/sdcard.img.gz := sunxi-sdcard | append-metadata | gzip
 endef

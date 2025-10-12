@@ -10,7 +10,7 @@
  	sun8i-t3-cqa3t-bv3.dtb \
 --- /dev/null
 +++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
-@@ -0,0 +1,223 @@
+@@ -0,0 +1,229 @@
 +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
 +// Copyright (C) 2022 Arm Ltd.
 +
@@ -158,6 +158,11 @@
 +	vcc-pe-supply = <&reg_avdd2v8>;
 +	vcc-pf-supply = <&reg_3v3>;
 +	vcc-pg-supply = <&reg_3v3>;
++
++	uart1_pg8_rts_pin: uart1-pg8-rts-pin {
++		pins = "PG8";
++		function = "uart1";
++	};
 +};
 +
 +&reg_usb1_vbus {
@@ -225,11 +230,12 @@
 +/* Used for RTL8723BS bluetooth */
 +&uart1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pg6_pins>, <&uart1_pg8_rts_cts_pins>;
++	pinctrl-0 = <&uart1_pg6_pins>, <&uart1_pg8_rts_pin>;
 +	status = "okay";
 +
 +	bluetooth {
 +		compatible = "realtek,rtl8723bs-bt";
++		reset-gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* PD15 */
 +		device-wake-gpios = <&pio 6 15 GPIO_ACTIVE_HIGH>; /* PG15 */
 +		host-wake-gpios = <&pio 6 9 GPIO_ACTIVE_HIGH>; /* PG9 */
 +	};
