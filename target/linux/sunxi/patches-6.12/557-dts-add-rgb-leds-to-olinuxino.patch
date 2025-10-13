@@ -1,0 +1,43 @@
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Subject: riscv: dts: allwinner: sunxi: add LED to Olinuxino T113
+Date: Sun, 29 Oct 2023 16:26:59 -0500
+
+Add LED controller support for the T113 Olinuxino, connected to PG13.
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+
+ .../boot/dts/allwinner/sun20i-d1-lichee-rv-dock.dts | 12 ++++++++++++
+ arch/riscv/boot/dts/allwinner/sun20i-d1-nezha.dts   | 13 +++++++++++++
+ 2 files changed, 25 insertions(+)
+
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
+@@ -155,6 +155,11 @@
+ 		pins = "PG8";
+ 		function = "uart1";
+ 	};
++
++	ledc_pg13_pin: ledc-pg13-pin {
++		pins = "PG13";
++		function = "ledc";
++	};
+ };
+ 
+ &reg_usb1_vbus {
+@@ -226,3 +231,16 @@
+ 		host-wake-gpios = <&pio 6 9 GPIO_ACTIVE_HIGH>; /* PG9 */
+ 	};
+ };
++
++&ledc {
++	pinctrl-0 = <&ledc_pg13_pin>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	multi-led@0 {
++		reg = <0x0>;
++		color = <LED_COLOR_ID_RGB>;
++		function = LED_FUNCTION_STATUS;
++	};
++};
++
