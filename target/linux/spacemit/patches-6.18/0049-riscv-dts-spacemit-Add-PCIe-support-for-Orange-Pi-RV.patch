@@ -1,0 +1,94 @@
+From e5e2c0b51b91277aa6b6b3eccae7cb087be753d9 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Tue, 6 Jan 2026 12:13:35 +0000
+Subject: [PATCH 49/54] riscv: dts: spacemit: Add PCIe support for Orange Pi
+ RV2
+
+Update "k1-orangepi-rv2.dts" to enable support for PCIe on the Orange Pi
+RV2 board.  This board differs from the Banana Pi BPI-Fe in that its
+"pcie_vcc_3v3" regulator is controlled by a GPIO.
+
+Signed-off-by: Johannes Erdfelt <johannes@erdfelt.com>
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ .../boot/dts/spacemit/k1-orangepi-rv2.dts     | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 93928ecd1..398cc86d1 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -33,6 +33,31 @@ led1 {
+ 			default-state = "on";
+ 		};
+ 	};
++
++	reg_dc_in: dc-in-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "dc_in_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	pcie_vcc_3v3: pcie-vcc3v3 {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&gpio K1_GPIO(116) GPIO_ACTIVE_HIGH>;	/* EXT_PWR_EN */
++		regulator-name = "PCIE_VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&reg_dc_in>;
++	};
++};
++
++&combo_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_3_cfg>;
++	status = "okay";
+ };
+ 
+ &emmc {
+@@ -91,6 +116,38 @@ rgmii1: phy@1 {
+ 	};
+ };
+ 
++&pcie1_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_3_cfg>;
++	status = "okay";
++};
++
++&pcie1_port {
++	phys = <&pcie1_phy>;
++};
++
++&pcie2_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie2_4_cfg>;
++	status = "okay";
++};
++
++&pcie1 {
++	phys = <&pcie1_phy>;
++	vpcie3v3-supply = <&pcie_vcc_3v3>;
++	status = "okay";
++};
++
++&pcie2_port {
++	phys = <&pcie2_phy>;
++};
++
++&pcie2 {
++	phys = <&pcie2_phy>;
++	vpcie3v3-supply = <&pcie_vcc_3v3>;
++	status = "okay";
++};
++
+ &pdma {
+ 	status = "okay";
+ };
+-- 
+2.39.5
+

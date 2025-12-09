@@ -1,0 +1,37 @@
+From 8daa1423f95ad8029d238c2806065657c128d699 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Mon, 5 Jan 2026 14:20:32 +0000
+Subject: [PATCH 46/54] riscv: dts: spacemit: bpi-f3: add status LED aliases
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 012df1360..9806e25e9 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -19,6 +19,10 @@ aliases {
+ 		i2c8 = &i2c8;
+ 		mmc0 = &emmc;
+ 		mmc1 = &sdio0;
++		led-boot = &led_user;
++		led-failsafe = &led_user;
++		led-running = &led_user;
++		led-upgrade = &led_user;
+ 	};
+ 
+ 	chosen {
+@@ -28,7 +32,7 @@ chosen {
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		led1 {
++		led_user: led1 {
+ 			label = "sys-led";
+ 			gpios = <&gpio K1_GPIO(96) GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+-- 
+2.39.5
+

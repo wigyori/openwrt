@@ -1,0 +1,41 @@
+From 3aa374fe9b258cf6886dda7530d4b58d38597674 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Mon, 5 Jan 2026 14:19:34 +0000
+Subject: [PATCH 45/54] riscv: dts: spacemit: add the missing reset entries for
+ the SD slots
+
+The two sdhci nodes referring to the SD slots require resets to be
+listed.
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index 5478b3f2a..35b5c7f95 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -1104,6 +1104,9 @@ sdio0: mmc@d4280000 {
+ 				clocks = <&syscon_apmu CLK_SDH_AXI>,
+ 				         <&syscon_apmu CLK_SDH0>;
+ 				clock-names = "core", "io";
++				resets = <&syscon_apmu RESET_SDH_AXI>,
++					 <&syscon_apmu RESET_SDH0>;
++				reset-names = "axi", "sdh";
+ 				status = "disabled";
+ 			};
+ 
+@@ -1114,6 +1117,9 @@ sdio1: mmc@d4280800 {
+ 				clocks = <&syscon_apmu CLK_SDH_AXI>,
+ 				         <&syscon_apmu CLK_SDH1>;
+ 				clock-names = "core", "io";
++				resets = <&syscon_apmu RESET_SDH_AXI>,
++					 <&syscon_apmu RESET_SDH1>;
++				reset-names = "axi", "sdh";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+2.39.5
+

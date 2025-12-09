@@ -1,0 +1,46 @@
+From 0be901280dfc40728c3bd973022bdcc1d789ced7 Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Thu, 15 May 2025 19:43:17 -0500
+Subject: [PATCH 28/54] riscv: dts: spacemit: define two SD nodes
+
+Define nodes describing the SD card and the SDIO interface.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index 2e206df27..9e8454561 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -1076,6 +1076,26 @@ storage-bus {
+ 			#size-cells = <2>;
+ 			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+ 
++			sdio0: mmc@d4280000 {
++				compatible = "spacemit,k1-sdhci";
++				reg = <0x0 0xd4280000 0x0 0x200>;
++				interrupts-extended = <&plic 99>;
++				clocks = <&syscon_apmu CLK_SDH_AXI>,
++				         <&syscon_apmu CLK_SDH0>;
++				clock-names = "core", "io";
++				status = "disabled";
++			};
++
++			sdio1: mmc@d4280800 {
++				compatible = "spacemit,k1-sdhci";
++				reg = <0x0 0xd4280800 0x0 0x200>;
++				interrupts-extended = <&plic 100>;
++				clocks = <&syscon_apmu CLK_SDH_AXI>,
++				         <&syscon_apmu CLK_SDH1>;
++				clock-names = "core", "io";
++				status = "disabled";
++			};
++
+ 			emmc: mmc@d4281000 {
+ 				compatible = "spacemit,k1-sdhci";
+ 				reg = <0x0 0xd4281000 0x0 0x200>;
+-- 
+2.39.5
+

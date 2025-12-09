@@ -1,0 +1,39 @@
+From 519f62d768e5e989d16ea0de2b0259985f4b7ab9 Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Mon, 30 Jun 2025 22:15:17 +0800
+Subject: [PATCH 31/54] riscv: dts: spacemit: add QSPI flash
+
+Define a GigaDevice GD25Q64E 8MB flash chip attached to the QSPI
+controller on the Banana Pi BPI-F3.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 0ca26b17a..48538018c 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -149,6 +149,18 @@ &qspi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&qspi_cfg>;
+ 	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++		spi-max-frequency = <26500000>;
++		m25p,fast-read;
++		broken-flash-reset;
++		vcc-supply = <&vcc_3v3_sys>;
++		status = "okay";
++	};
+ };
+ 
+ &i2c8 {
+-- 
+2.39.5
+

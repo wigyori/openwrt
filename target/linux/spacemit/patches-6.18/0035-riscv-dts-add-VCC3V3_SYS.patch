@@ -1,0 +1,45 @@
+From edaffc4b864891fdb5d26d2e272c02f3d3ebdf81 Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Fri, 17 Oct 2025 12:43:44 -0500
+Subject: [PATCH 35/54] riscv: dts: add VCC3V3_SYS
+
+Add VCC3V3_SYS as an always-on regulator, with a name that matches
+what's on the Banana Pi BPI-F3 schematic.
+
+Add that as the "vcc" supply for the flash chip.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 48538018c..3d0176fb4 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -77,6 +77,14 @@ usb3_vbus: regulator-vbus-5v {
+ 		gpio = <&gpio K1_GPIO(97) GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	vcc_3v3_sys: vcc3v3-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC3V3_SYS";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
+ };
+ 
+ &combo_phy {
+@@ -320,6 +328,7 @@ flash@0 {
+ 		spi-max-frequency = <26500000>;
+ 		m25p,fast-read;
+ 		broken-flash-reset;
++		vcc-supply = <&vcc_3v3_sys>;
+ 		status = "okay";
+ 	};
+ };
+-- 
+2.39.5
+

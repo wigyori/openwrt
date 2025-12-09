@@ -1,0 +1,74 @@
+From 18b93b7a42476d1ae9a6d579293fc2860b10ae93 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Mon, 5 Jan 2026 14:18:47 +0000
+Subject: [PATCH 42/54] riscv: dts: spacemit: Add MMC support on BPI-F3 and
+ OrangePi RV2
+
+This introduces a new sdhci0 node and enables it
+for the BananaPI F3 and OrangePi RV2 boards.
+
+Note that card detect is marked as broken in the driver
+(SDHCI_QUIRK_BROKEN_CARD_DETECTION quirk), therefore removing the card
+while the system is running won't have any effect.
+
+Signed-off-by: Michael Opdenacker <michael.opdenacker@rootcommit.com>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 12 ++++++++++++
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi    | 13 +++++++++++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 652e95304..012df1360 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -17,6 +17,8 @@ aliases {
+ 		spi3 = &spi3;
+ 		i2c2 = &i2c2;
+ 		i2c8 = &i2c8;
++		mmc0 = &emmc;
++		mmc1 = &sdio0;
+ 	};
+ 
+ 	chosen {
+@@ -364,6 +366,16 @@ flash@0 {
+ 	};
+ };
+ 
++&sdio0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_cfg>;
++	bus-width = <4>;
++	cd-gpios = <&gpio K1_GPIO(80) GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	no-sdio;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+index 34d88334e..2408aacef 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+@@ -590,4 +590,17 @@ ssp3-0-frm-pins {
+ 			power-source = <3300>;
+ 		};
+ 	};
++
++	mmc1_cfg: mmc1-cfg {
++		mmc1-pins {
++			pinmux = <K1_PADCONF(92, 0)>,   /* mmc1_d3 */
++				 <K1_PADCONF(91, 0)>,   /* mmc1_d2 */
++				 <K1_PADCONF(90, 0)>,   /* mmc1_d1 */
++				 <K1_PADCONF(89, 0)>,   /* mmc1_d0 */
++				 <K1_PADCONF(113, 0)>,  /* mmc1_cmd */
++				 <K1_PADCONF(114, 0)>;  /* mmc1_clk */
++			bias-pull-up = <1>;
++			drive-strength = <21>;
++		};
++	};
+ };
+-- 
+2.39.5
+

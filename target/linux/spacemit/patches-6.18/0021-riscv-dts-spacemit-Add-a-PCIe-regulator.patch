@@ -1,0 +1,35 @@
+From ebf159714244eff1c18e59d47d4d159104308abd Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Thu, 13 Nov 2025 15:45:38 -0600
+Subject: [PATCH 21/54] riscv: dts: spacemit: Add a PCIe regulator
+
+Define a 3.3v fixed voltage regulator to be used by PCIe on the
+Banana Pi BPI-F3.  On this platform, this regulator is always on.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 23f3d7a91..4d82c6e75 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -31,6 +31,14 @@ led1 {
+ 		};
+ 	};
+ 
++	pcie_vcc_3v3: pcie-vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "PCIE_VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
+ 	reg_dc_in: dc-in-12v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "dc_in_12v";
+-- 
+2.39.5
+

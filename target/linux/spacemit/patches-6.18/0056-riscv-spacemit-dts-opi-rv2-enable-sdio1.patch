@@ -1,0 +1,42 @@
+From f582479ebb5a0ab8fafde5279d5a184782c49131 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Sun, 18 Jan 2026 14:30:22 +0000
+Subject: [PATCH 56/56] riscv: spacemit: dts: opi-rv2: enable sdio1
+
+This SD bus contains an AP6256 wifi+BT module.
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 6d804516f..5decd5976 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -319,6 +319,22 @@ &sdio0 {
+ 	status = "okay";
+ };
+ 
++/*&sdio1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_cfg>;
++	bus-width = <4>;
++	no-mmc;
++	no-sd;
++	keep-power-in-suspend;
++	non-removable;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++*/
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+-- 
+2.39.5
+

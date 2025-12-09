@@ -1,0 +1,45 @@
+From 8affc0a20c621ceba59e1c02eeff6184b478721d Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Thu, 15 May 2025 17:46:53 -0500
+Subject: [PATCH 32/54] mmc: sdhci-of-k1: use readw() for 16-bit values
+
+In spacemit_sdhci_set_uhs_signaling() there is a case where some bits
+should be set in the SDHCI_HOST_CONTROL2 register.  This is donne using
+spacemit_sdhci_setbits(), but that does 32-bit accesses (with readl()
+and writel()), while that register is 16 bits wide (and 16-bit aligned).
+
+For eMMC (which is all we claim to support right now), the "no-sdio"
+property should be set, which means this block of conditional code
+will not be executed.
+
+This bug fix has not been submitted for upstream review.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ drivers/mmc/host/sdhci-of-k1.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
+index 0cc97e23a..d06487f76 100644
+--- a/drivers/mmc/host/sdhci-of-k1.c
++++ b/drivers/mmc/host/sdhci-of-k1.c
+@@ -112,8 +112,14 @@ static void spacemit_sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned i
+ 
+ 	sdhci_set_uhs_signaling(host, timing);
+ 
+-	if (!(host->mmc->caps2 & MMC_CAP2_NO_SDIO))
+-		spacemit_sdhci_setbits(host, SDHCI_CTRL_VDD_180, SDHCI_HOST_CONTROL2);
++	if (!(host->mmc->caps2 & MMC_CAP2_NO_SDIO)) {
++		u32 reg = SDHCI_HOST_CONTROL2;
++		u16 val = sdhci_readw(host, reg);
++
++		val |= SDHCI_CTRL_VDD_180;
++
++		sdhci_writew(host, val, reg);
++	}
+ }
+ 
+ static void spacemit_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+-- 
+2.39.5
+

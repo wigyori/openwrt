@@ -1,0 +1,11 @@
+--- a/drivers/base/core.c.orig	2025-12-16 23:44:40.224175675 +0000
++++ b/drivers/base/core.c	2025-12-16 23:44:41.680186568 +0000
+@@ -1652,7 +1652,7 @@
+ #define FW_DEVLINK_FLAGS_RPM		(FW_DEVLINK_FLAGS_ON | \
+ 					 DL_FLAG_PM_RUNTIME)
+ 
+-static u32 fw_devlink_flags = FW_DEVLINK_FLAGS_PERMISSIVE;
++static u32 fw_devlink_flags = FW_DEVLINK_FLAGS_RPM;
+ static int __init fw_devlink_setup(char *arg)
+ {
+ 	if (!arg)

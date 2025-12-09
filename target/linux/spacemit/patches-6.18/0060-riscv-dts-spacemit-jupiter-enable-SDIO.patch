@@ -1,0 +1,48 @@
+From 14d78d6b1774d3c4c1adbcb75b9cf48d840025e6 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Sun, 18 Jan 2026 14:17:39 +0000
+Subject: [PATCH 54/54] riscv: dts: spacemit: jupiter: enable SDIO
+
+Add an sdio0 node, and order SDIO/eMMC.
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+index a08286136..00b77721c 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
+@@ -17,6 +17,8 @@ aliases {
+ 		ethernet0 = &eth0;
+ 		ethernet1 = &eth1;
+ 		serial0 = &uart0;
++		mmc0 = &emmc;
++		mmc1 = &sdio0;
+ 	};
+ 
+ 	chosen {
+@@ -297,8 +299,19 @@ &pdma {
+ 	status = "okay";
+ };
+ 
++&sdio0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_cfg>;
++	bus-width = <4>;
++	cd-gpios = <&gpio K1_GPIO(80) GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	no-sdio;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+ 	status = "okay";
+ };
++
+-- 
+2.39.5
+

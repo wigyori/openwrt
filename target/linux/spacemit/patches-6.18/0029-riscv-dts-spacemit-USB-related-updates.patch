@@ -1,0 +1,128 @@
+From 89f73b121c9492df40e469cc572fbaaa324f1bd9 Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Mon, 21 Jul 2025 12:28:42 -0500
+Subject: [PATCH 29/54] riscv: dts: spacemit: USB-related updates
+
+Provided by Ze Huang.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ .../boot/dts/spacemit/k1-bananapi-f3.dts      | 47 +++++++++++++++++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi          | 32 +++++++++++++
+ 2 files changed, 79 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 4a6b173f1..16f2a6e53 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -58,6 +58,25 @@ reg_vcc_4v: vcc-4v {
+ 		regulator-always-on;
+ 		vin-supply = <&reg_dc_in>;
+ 	};
++
++	usb3_vhub: regulator-vhub-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "USB30_VHUB";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio K1_GPIO(123) GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	usb3_vbus: regulator-vbus-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "USB30_VBUS";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		gpio = <&gpio K1_GPIO(97) GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &combo_phy {
+@@ -289,3 +308,31 @@ &uart0 {
+ 	pinctrl-0 = <&uart0_2_cfg>;
+ 	status = "okay";
+ };
++
++&usbphy2 {
++	status = "okay";
++};
++
++&usb_dwc3 {
++	dr_mode = "host";
++	vbus-supply = <&usb3_vbus>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	hub_2_0: hub@1 {
++		compatible = "usb2109,2817";
++		reg = <0x1>;
++		vdd-supply = <&usb3_vhub>;
++		peer-hub = <&hub_3_0>;
++		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
++	};
++
++	hub_3_0: hub@2 {
++		compatible = "usb2109,817";
++		reg = <0x2>;
++		vdd-supply = <&usb3_vhub>;
++		peer-hub = <&hub_2_0>;
++		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
++	};
++};
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index 9e8454561..ade9cb68d 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -359,6 +359,14 @@ syscon_rcpu2: system-controller@c0888000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
++		usbphy2: phy@c0a30000 {
++			compatible = "spacemit,k1-usb2-phy";
++			reg = <0x0 0xc0a30000 0x0 0x200>;
++			clocks = <&syscon_apmu CLK_USB30>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
+ 		combo_phy: phy@c0b10000 {
+ 			compatible = "spacemit,k1-combo-phy";
+ 			reg = <0x0 0xc0b10000 0x0 0x1000>;
+@@ -1105,6 +1113,30 @@ emmc: mmc@d4281000 {
+ 				interrupts = <101>;
+ 				status = "disabled";
+ 			};
++
++			usb_dwc3: usb@c0a00000 {
++				compatible = "spacemit,k1-dwc3";
++				reg = <0x0 0xc0a00000 0x0 0x10000>;
++				clocks = <&syscon_apmu CLK_USB30>;
++				clock-names = "usbdrd30";
++				interrupts = <125>;
++				phys = <&usbphy2>,
++				       <&combo_phy PHY_TYPE_USB3>;
++				phy-names = "usb2-phy",
++					    "usb3-phy";
++				phy_type = "utmi";
++				resets = <&syscon_apmu RESET_USB30_AHB>,
++					 <&syscon_apmu RESET_USB30_VCC>,
++					 <&syscon_apmu RESET_USB30_PHY>;
++				snps,hsphy_interface = "utmi";
++				snps,dis_enblslpm_quirk;
++				snps,dis-u2-freeclk-exists-quirk;
++				snps,dis-del-phy-power-chg-quirk;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_u3_susphy_quirk;
++				snps,dis_rxdet_inp3_quirk;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+2.39.5
+

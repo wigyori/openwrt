@@ -1,0 +1,36 @@
+From 3e1c8bcf1b5fa3730e7053c201c49904aa500872 Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Mon, 30 Jun 2025 22:15:17 +0800
+Subject: [PATCH 30/54] riscv: dts: add GD25Q64E as SPI3 device
+
+Add the GigaDevice GD25Q64E SPI NOR chip as a SPI device
+accessed via the SPI3 controller.
+
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 16f2a6e53..0ca26b17a 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -301,6 +301,15 @@ &spi3 {
+ 	pinctrl-0 = <&ssp3_0_cfg>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <26500000>;
++		m25p,fast-read;
++		broken-flash-reset;
++		status = "okay";
++	};
+ };
+ 
+ &uart0 {
+-- 
+2.39.5
+

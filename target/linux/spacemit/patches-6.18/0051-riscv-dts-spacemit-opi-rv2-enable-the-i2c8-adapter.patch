@@ -1,0 +1,39 @@
+From 9ef1baef037dae90c830ea24fb9b31ced16cd033 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Tue, 6 Jan 2026 13:07:20 +0000
+Subject: [PATCH 51/54] riscv: dts: spacemit: opi-rv2: enable the i2c8 adapter
+
+Enable the i2c8 bus which provides access to the P1 PMIC on the
+RV2, and enable the PMIC as well.
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 398cc86d1..195a2706c 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -116,6 +116,18 @@ rgmii1: phy@1 {
+ 	};
+ };
+ 
++&i2c8 {
++	pinctrl-0 = <&i2c8_cfg>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	pmic@41 {
++		compatible = "spacemit,p1";
++		reg = <0x41>;
++		interrupts = <64>;
++	};
++};
++
+ &pcie1_phy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie1_3_cfg>;
+-- 
+2.39.5
+

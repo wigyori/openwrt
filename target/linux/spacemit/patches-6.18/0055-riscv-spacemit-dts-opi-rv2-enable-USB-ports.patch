@@ -1,0 +1,65 @@
+From 8c9ff80bc5e25a85d75bd639180c445d64f17481 Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Sun, 18 Jan 2026 14:29:44 +0000
+Subject: [PATCH 55/56] riscv: spacemit: dts: opi-rv2: enable USB ports
+
+Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
+---
+ .../boot/dts/spacemit/k1-orangepi-rv2.dts     | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 00b77721c..6d804516f 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -54,6 +54,16 @@ pcie_vcc_3v3: pcie-vcc3v3 {
+ 		regulator-max-microvolt = <3300000>;
+ 		vin-supply = <&reg_dc_in>;
+ 	};
++
++	usb3_vbus: regulator-vbus-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "USB30_VBUS";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		gpio = <&gpio K1_GPIO(123) GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &combo_phy {
+@@ -315,3 +325,30 @@ &uart0 {
+ 	status = "okay";
+ };
+ 
++&usbphy2 {
++	status = "okay";
++};
++
++&usb_dwc3 {
++	dr_mode = "host";
++	vbus-supply = <&usb3_vbus>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	hub_2_0: hub@1 {
++//		compatible = "usb2109,2817";
++		reg = <0x1>;
++		vdd-supply = <&usb3_vbus>;
++		peer-hub = <&hub_3_0>;
++		reset-gpios = <&gpio K1_GPIO(123) GPIO_ACTIVE_LOW>;
++	};
++
++	hub_3_0: hub@2 {
++//		compatible = "usb2109,817";
++		reg = <0x2>;
++		vdd-supply = <&usb3_vbus>;
++		peer-hub = <&hub_2_0>;
++		reset-gpios = <&gpio K1_GPIO(123) GPIO_ACTIVE_LOW>;
++	};
++};
+-- 
+2.39.5
+
