@@ -1,0 +1,14 @@
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
+@@ -19,6 +19,11 @@
+ 		ethernet1 = &rtl8723bs;
+ 		mmc0 = &mmc0;
+ 		mmc1 = &mmc1;
++
++		led-boot = &led_green;
++		led-failsafe = &led_green;
++		led-running = &led_green;
++		led-upgrade = &led_green;
+ 	};
+ 
+ 	chosen {
