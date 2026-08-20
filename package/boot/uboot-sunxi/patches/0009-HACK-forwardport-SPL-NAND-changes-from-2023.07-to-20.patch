@@ -1,0 +1,33 @@
+From 00a674bf9149f4df7ab0f4d37709ca9534c7f15a Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Date: Thu, 20 Aug 2026 15:22:52 +0200
+Subject: [PATCH] HACK: forwardport SPL NAND changes from 2023.07 to 2026.07
+
+---
+ arch/arm/mach-sunxi/spl_spi_sunxi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/mach-sunxi/spl_spi_sunxi.c b/arch/arm/mach-sunxi/spl_spi_sunxi.c
+index ffb2b2e5c07..b720270481c 100644
+--- a/arch/arm/mach-sunxi/spl_spi_sunxi.c
++++ b/arch/arm/mach-sunxi/spl_spi_sunxi.c
+@@ -467,7 +467,7 @@ static int spl_spi_try_load(struct spl_image_info *spl_image,
+ 		image_get_magic(header) == FDT_MAGIC) {
+ 
+ 		debug("Found FIT image\n");
+-		spl_load_init(&load, spi_load_read, NULL, 1);
++		spl_load_init(load, spi_load_read_nor, NULL, 1);
+ 		ret = spl_load_simple_fit(spl_image, load,
+ 					  offset, header);
+ 	} else {
+@@ -484,6 +484,7 @@ static int spl_spi_try_load(struct spl_image_info *spl_image,
+ 	}
+ 
+ 	return ret;
++}
+ 
+ static int spl_spi_load_image(struct spl_image_info *spl_image,
+ 					      struct spl_boot_device *bootdev)
+-- 
+2.30.2
+
