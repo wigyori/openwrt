@@ -362,6 +362,24 @@ define Device/olimex_olinuxino
 endef
 TARGET_DEVICES += olimex_olinuxino
 
+define Device/olimex_olinuxino_spinand
+  $(call Device/FitImageGzip)
+  DEVICE_VENDOR := Olimex
+  DEVICE_MODEL := Olinuxino T113 (SPI-NAND)
+  DEVICE_PACKAGES:=kmod-rtc-sunxi
+  SOC := sun8i-t113s
+  SUNXI_DTS := $$(SUNXI_DTS_DIR)$$(SOC)-olinuxino
+  KERNEL_IN_UBI := 1
+  IMAGES := factory.ubi
+  IMAGE/factory.ubi := append-ubi
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_SIZE := 6096k
+  IMAGE_SIZE := 25344k
+#  IMAGE/sdcard.img.gz := sunxi-sdcard | append-metadata | gzip
+endef
+TARGET_DEVICES += olimex_olinuxino_spinand
+
 define Device/rongpin_rp-t113
   $(call Device/FitImageGzip)
   DEVICE_VENDOR := Rongpin
