@@ -3,6 +3,7 @@
 @@ -0,0 +1,193 @@
 +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
 +// Copyright (C) 2022 Arm Ltd.
++// Copyright (C) 2026 Zoltan HERPAI <wigyori@uid0.hu>
 +
 +#include <dt-bindings/interrupt-controller/irq.h>
 +#include <dt-bindings/gpio/gpio.h>
@@ -180,23 +181,22 @@
 +};
 +
 +&spi0 {
-+      status = "okay";
++	status = "okay";
 +
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&spi0_pins>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
 +
-+      flash@0 {
-+              #address-cells = <1>;
-+              #size-cells = <1>;
-+
-+              compatible = "spi-nand";
-+              reg = <0>;
-+                spi-max-frequency = <52000000>;
-+      };
++	flash@0 {
++		compatible = "spi-nand";
++		reg = <0>;
++		spi-max-frequency = <52000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++	};
 +};
 --- /dev/null
 +++ b/configs/olimex_olinuxino_defconfig
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,48 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_SUNXI=y
 +CONFIG_DEFAULT_DEVICE_TREE="allwinner/sun8i-t113s-olinuxino"
@@ -228,13 +228,20 @@
 +CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_MTD=y
 +CONFIG_DM_MTD=y
-+CONFIG_DM_SPI_FLASH=y
-+CONFIG_SYS_MTDPARTS_RUNTIME=y
++# CONFIG_DM_SPI_FLASH is not set
++# CONFIG_SYS_MTDPARTS_RUNTIME is not set
 +CONFIG_MTD_SPI_NAND=y
-+CONFIG_MTD_UBI_FASTMAP=y
-+CONFIG_SPI_FLASH_WINBOND=y
-+# CONFIG_SPI_FLASH_USE_4K_SECTORS is not set
-+CONFIG_SPI_FLASH_MTD=y
++CONFIG_CMD_MTD=y
++CONFIG_CMD_MTDPARTS=y
++CONFIG_CMD_UBI=y
++# CONFIG_CMD_SF is not set
++# CONFIG_SPI_FLASH is not set
++CONFIG_ENV_IS_IN_UBI=y
++CONFIG_ENV_UBI_PART="ubi"
++CONFIG_ENV_UBI_VOLUME="env"
 +CONFIG_SPL_SPI_FLASH_MTD=y
 +CONFIG_SPL_SPI_SUNXI=y
 +CONFIG_SPI=y
++CONFIG_SPL_SPI_SUNXI_NAND=y
++CONFIG_SPL_SPI_SUNXI_NAND_ASSUMED_PAGESIZE=0x800
++CONFIG_SYS_SPI_U_BOOT_OFFS=0x20000
