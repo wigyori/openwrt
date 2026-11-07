@@ -1,0 +1,25 @@
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
+@@ -201,8 +201,11 @@
+ &spi0 {
+ 	status = "okay";
+ 
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&qspi0_pc_pins>;
++	/delete-property/ dmas;
++	/delete-property/ dma-names;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
+ 
+ 	flash@0 {
+ 		#address-cells = <1>;
+@@ -211,6 +214,8 @@
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <40000000>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <1>;
+ 
+ 		partitions {
+ 			compatible = "fixed-partitions";

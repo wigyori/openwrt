@@ -1,0 +1,26 @@
+--- a/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-olinuxino.dts
+@@ -211,6 +211,23 @@
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <40000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0 0x100000>;
++				read-only;
++			};
++
++			partition@100000 {
++				label = "ubi";
++				reg = <0x100000 0x7f00000>;
++			};
++		};
+ 	};
+ };
+ 
